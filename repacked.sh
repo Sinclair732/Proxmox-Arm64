@@ -1,6 +1,7 @@
 #!/bin/bash
-repacked_path="/repacked"
-mirror_path="/var/spool/apt-mirror/mirror/download.proxmox.com/debian/devel/dists/bullseye/main/binary-amd64/"
+dist="bookworm"
+repacked_path="/tmp/repacked"
+mirror_path="/var/spool/apt-mirror/mirror/download.proxmox.com/debian/devel/dists/${dist}/main/binary-amd64/"
 #newpkg
 ls  $mirror_path |grep librust>/tmp/newpkg
 #oldpkg
@@ -19,13 +20,13 @@ exit 0
 fi
 
 for packlist in `cat /tmp/needpkg`;do
-extract_path="/librust/$packlist/extract" 
+extract_path="/tmp/librust/$packlist/extract" 
 mkdir $extract_path/DEBIAN -p
 dpkg -X $mirror_path$packlist $extract_path > /dev/null
 dpkg -e $mirror_path$packlist $extract_path/DEBIAN > /dev/null
 sed -i "s/amd64/arm64/g" $extract_path/DEBIAN/control > /dev/null
 dpkg-deb -Zxz -b  $extract_path  $repacked_path  > /dev/null
-echo "$(date "+%Y/%m/%d %H:%M:%S") repacked $packlist done" >>/var/log/repacked.log
+echo "$(date "+%Y/%m/%d %H:%M:%S") repacked $packlist done" >>/tmp/repacked.log
 done
 echo "$(date "+%Y/%m/%d %H:%M:%S") all package repacked  done" 
-echo "$(date "+%Y/%m/%d %H:%M:%S") all package repacked  done" >>/var/log/repacked.log
+echo "$(date "+%Y/%m/%d %H:%M:%S") all package repacked  done" >>/tmp/repacked.log
