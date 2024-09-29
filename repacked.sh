@@ -1,15 +1,17 @@
-#!/bin/bash
+#!/bin/bash -x
+
 dist="bookworm"
 repacked_path="tmp/repacked"
+mkdir ${repacked}
 mirror_path="/var/spool/apt-mirror/mirror/download.proxmox.com/debian/devel/dists/${dist}/main/binary-amd64/"
 #newpkg
 ls  $mirror_path |grep librust>tmp/newpkg
 #oldpkg
 ls $repacked_path >tmp/oldpkg
 #oldpkg-arm64.deb to amd64.deb
-sed -i "s/arm64/amd64/g" /tmp/oldpkg 
+sed -i "s/arm64/amd64/g" tmp/oldpkg 
 #diff
-diff -u tmp/oldpkg tmp/newpkg |grep +librust|sed "s/^.//g" > /tmp/needpkg
+diff -u tmp/oldpkg tmp/newpkg |grep +librust|sed "s/^.//g" > tmp/needpkg
 echo "$(date "+%Y/%m/%d %H:%M:%S") Needpkgs:" 
 if test -s tmp/needpkg
 then
