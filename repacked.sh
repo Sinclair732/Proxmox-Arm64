@@ -2,7 +2,7 @@
 
 dist="bookworm"
 repacked_path="build/repacked"
-mkdir -p ${repacked}
+mkdir -p ${repacked_path}
 mirror_path="/var/spool/apt-mirror/mirror/download.proxmox.com/debian/devel/dists/${dist}/main/binary-amd64/"
 #newpkg
 ls  $mirror_path |grep librust > build/newpkg
